@@ -1,7 +1,8 @@
 <template>  
     <div class="container">
         <h1>Webpack message: {{ message }}</h1>
-        
+        <select name="selectFrom" id="selectFrom"/>
+        <select name="selectTo" id="selectTo"/>
     </div>
 </template>
 
@@ -31,5 +32,6 @@ export default {
 h1 {
     font-family: 'Roboto', sans-serif;
     margin: 0;
+    margin-bottom: 20px;
 }
 </style>
