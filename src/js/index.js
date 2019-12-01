@@ -94,6 +94,7 @@ window.onload = function() {
 
     let inInput = this.document.getElementById("curr_input");
     inInput.addEventListener('keydown', checkText, false);
+    inInput.addEventListener('keyup', checkText, false);
     let outInput = this.document.getElementById("curr_output");
     let btnConvert = this.document.getElementById("text-convert-to");
     btnConvert.onclick = () => {
@@ -104,9 +105,9 @@ window.onload = function() {
     }
 
     function checkText() {
-        let yourText = /[-;":'a-zA-Zа-яА-Я\\=`ё/\*++!@#$%\^++!@#$%\^&_№?><]/;
+        let yourText = /[-;":',a-zA-Zа-яА-Я\\=`ё/\*++!@#$%\^++!@#$%\^&_№?><]/;
         if (yourText.test(inInput.value)) {
-            inInput.value = "";
+            inInput.value = "1";
         }
     }
 }
