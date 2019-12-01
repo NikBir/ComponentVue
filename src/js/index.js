@@ -1,56 +1,56 @@
-// ======================================================================
-var https = require('https');
-
-function convertCurrency(amount, fromCurrency, toCurrency, cb) {
-  var apiKey = '770aceaed9776cd5edbb';
-
-  fromCurrency = encodeURIComponent(fromCurrency);
-  toCurrency = encodeURIComponent(toCurrency);
-  var query = fromCurrency + '_' + toCurrency;
-
-  var url = 'https://free.currconv.com/api/v7/convert?q='
-            + query + '&compact=ultra&apiKey=' + apiKey;
-
-  https.get(url, function(res){
-      var body = '';
-
-      res.on('data', function(chunk){
-          body += chunk;
-      });
-
-      res.on('end', function(){
-          try {
-            var jsonObj = JSON.parse(body);
-
-            var val = jsonObj[query];
-            if (val) {
-              var total = val * amount;
-              cb(null, Math.round(total * 1000) / 1000);
-            } else {
-              var err = new Error("Value not found for " + query);
-              console.log(err);
-              cb(err);
-            }
-          } catch(e) {
-            console.log("Parse error: ", e);
-            cb(e);
-          }
-      });
-  }).on('error', function(e){
-        console.log("Got an error: ", e);
-        cb(e);
-  });
-}
-
-//uncomment to test
-
-convertCurrency(1, 'USD', 'RUB', function(err, amount) {
-  console.log(amount);
-});
-// ======================================================================
-
 window.onload = function() {
-    var arrayCurrency = [
+    // ======================================================================
+    var https = require('https');
+
+    function convertCurrency(amount, fromCurrency, toCurrency, cb) {
+    var apiKey = '770aceaed9776cd5edbb';
+
+    fromCurrency = encodeURIComponent(fromCurrency);
+    toCurrency = encodeURIComponent(toCurrency);
+    var query = fromCurrency + '_' + toCurrency;
+
+    var url = 'https://free.currconv.com/api/v7/convert?q='
+                + query + '&compact=ultra&apiKey=' + apiKey;
+
+    https.get(url, function(res){
+        var body = '';
+
+        res.on('data', function(chunk){
+            body += chunk;
+        });
+
+        res.on('end', function(){
+            try {
+                var jsonObj = JSON.parse(body);
+
+                var val = jsonObj[query];
+                if (val) {
+                var total = val * amount;
+                cb(null, Math.round(total * 1000) / 1000);
+                } else {
+                var err = new Error("Value not found for " + query);
+                console.log(err);
+                cb(err);
+                }
+            } catch(e) {
+                console.log("Parse error: ", e);
+                cb(e);
+            }
+        });
+    }).on('error', function(e){
+            console.log("Got an error: ", e);
+            cb(e);
+    });
+    }
+
+    //uncomment to test
+
+    // convertCurrency(1, 'RUB', 'USD', function(err, amount) {
+    //   console.log(amount);
+    // });
+    // ======================================================================
+
+    let arrayCurrency = [
         "AED", "AFN", "ALL", "AMD", "ANG", "AOA", "ARS", "AUD",
         "AWG", "AZN", "BAM", "BBD", "BDT", "BGN", "BHD", "BIF",
         "BMD", "BND", "BOB", "BRL", "BSD", "BTC", "BTN", "BWP",
@@ -73,14 +73,32 @@ window.onload = function() {
         "VND", "VUV", "WST", "XAF", "XAG", "XCD", "XDR", "XOF",
         "XPF", "YER", "ZAR", "ZMK", "ZMW", "ZWL"
     ];
-    var selectFrom = document.getElementsByName("selectFrom");
-    var selectTo = document.getElementsByName("selectTo");
-    var option = document.createElement('option');
-    for(var i = 0; i < arrayCurrency.length; i++){
+
+    let selectTo = document.getElementsByName("selectTo");
+    let option = document.createElement('option');
+    let selectFrom = document.getElementsByName("selectFrom");
+    for(let i = 0; i < arrayCurrency.length; i++){
         option.innerHTML = arrayCurrency[i];
+        option.value = arrayCurrency[i];
+        option.id = "input_" + arrayCurrency[i];
         selectFrom[0].appendChild(option.cloneNode(true));
+        option.id = "output_" + arrayCurrency[i];
         selectTo[0].appendChild(option.cloneNode(true));
     }
-    console.log(option);
-    console.log(selectFrom)
+
+    function SelectDefault() {
+        selectFrom[0].options[148].selected = true;
+        selectTo[0].options[121].selected = true;
+    }
+    SelectDefault();
+
+    let inInput = this.document.getElementById("curr_input");
+    let outInput = this.document.getElementById("curr_output");
+    let btnConvert = this.document.getElementById("text-convert-to");
+    btnConvert.onclick = () => {
+        convertCurrency(inInput.value, arrayCurrency[selectFrom[0].options.selectedIndex], arrayCurrency[selectTo[0].options.selectedIndex], function(err, amount) {
+            // console.log(amount);
+            outInput.value = amount;
+        });
+    }
 }

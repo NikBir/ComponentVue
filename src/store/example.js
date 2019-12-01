@@ -1,12 +1,16 @@
 export default {
     state: {
-        message: 'hello vuex'
+        message: 'Currency Converter',
+        textBtn: 'convert to'
     },
     mutations: {},
     actions: {},
     getters: {
         getMessage (state) {
             return state.message
+        },
+        getTextBtn (state) {
+            return state.textBtn
         }
     }
 }
